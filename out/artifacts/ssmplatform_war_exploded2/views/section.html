@@ -1,0 +1,98 @@
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>通讯录</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../layuiadmin/style/admin.css" media="all">
+  <link rel="stylesheet" href="../layuiadmin/style/template.css" media="all">
+</head>
+<body>
+
+
+<div class="layui-fluid layadmin-maillist-fluid">
+  <div class="layui-row layui-col-space15">
+<!--    <p th:text="${allSection}"></p>-->
+
+      <div class="layui-col-md4 layui-col-sm6" th:each="section : ${allSection}">
+<!--        <p th:text="${allSection}"></p>-->
+        <div class="layadmin-contact-box" >
+
+          <div class="layui-col-md4 layui-col-sm6">
+            <a href="javascript:;">
+              <div class="layadmin-text-center">
+                <img src="../layuiadmin/style/res/template/character.jpg">
+                <div class="layadmin-maillist-img layadmin-font-blod">
+                  <p th:text="${section.sname}"></p>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="layui-col-md8 layadmin-padding-left20 layui-col-sm6">
+            <a th:href="@{~/invitation/getInvitation(sid=${section.sid})}">
+              <h3 class="layadmin-title">
+                <strong th:text="${section.sname}"></strong>
+              </h3>
+              <!--            <p class="layadmin-textimg">-->
+              <!--              <i class="layui-icon layui-icon-location"></i>-->
+              <!--              上海-->
+              <!--            </p>-->
+            </a>
+            <div class="layadmin-address">
+              <a th:href="@{~/invitation/getInvitation(sid=${section.sid})}">
+                <strong th:text="${section.sstatement}"></strong>
+                <br>
+                  <p th:text="'热度:'+${section.shot}" id="hot"></p>
+                <br>
+                <div class="layui-card">
+                  <div class="layui-card-header"></div>
+                  <div class="layui-card-body">
+                    <div th:attr="id='test-rate-dome'+${section.sid}"></div>
+                  </div>
+                </div>
+                <br>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+  </div>
+</div>
+
+
+  <script src="../layuiadmin/layui/layui.js"></script>
+<!--  <script src="../layuiadmin/layui/lay/modules/jquery.js"></script>-->
+  <script type="text/javascript" th:inline="javascript">
+  layui.config({
+    base: '../layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index','rate'],function () {
+    var $ = layui.$;
+    var rate = layui.rate;
+    var sum = [[${allSection}]].length;
+    var sections = [[${allSection}]];
+    console.log(sections);
+    //热度
+    for (var i =0;i<sum;i++){
+      rate.render({
+        elem: '#test-rate-dome'+sections[i].sid
+        ,value: sections[i].shot
+        ,readonly: true
+      });
+
+  }
+
+  });
+  </script>
+</body>
+</html>

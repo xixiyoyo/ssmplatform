@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiyo.dao.InvitationMapper">
+    <select id="searchInvitation" parameterType="String" resultType="com.xiyo.domain.Invitation">
+        select * from invitation
+        <where>
+            <if test="itopic != null">
+                itopic like '%${itopic}%'
+            </if>
+            <if test="itopic != null">
+                itopic like '%${itopic}%'
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

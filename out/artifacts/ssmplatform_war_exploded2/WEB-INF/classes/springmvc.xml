@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-4.0.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+            http://www.springframework.org/schema/util
+            http://www.springframework.org/schema/util/spring-util-4.0.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+<!--    开启注解扫描，只扫描Controller注解-->
+  <context:component-scan base-package="com.xiyo.controller">
+<!--    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+  </context:component-scan>
+<!--  配置视图解析器-->
+<!--  <bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+<!--    <property name="prefix" value="/views/"/>-->
+<!--    <property name="suffix" value="*.jsp"/>-->
+<!--  </bean>-->
+
+  <!-- 模板解析器  -->
+  <bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
+    <property name="prefix" value="/views/"/>
+    <property name="suffix" value=".html"/>
+    <property name="templateMode" value="HTML"/>
+    <property name="cacheable" value="true"/>
+    <property name="characterEncoding" value="UTF-8"/>
+  </bean>
+
+  <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+    <property name="templateResolver" ref="templateResolver"/>
+    <property name="enableSpringELCompiler" value="true"/>
+  </bean>
+
+  <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+    <property name="templateEngine" ref="templateEngine"/>
+    <property name="characterEncoding" value="UTF-8"/>
+    <property name="order" value="1"/>
+    <!--<property name="viewNames" value="*.html,*.xhtml"/>-->
+  </bean>
+
+
+
+
+
+<!--  过滤静态资源-->
+  <mvc:default-servlet-handler/>
+
+<!--  开启SpringMVC的注解支持-->
+  <mvc:annotation-driven/>
+
+  <!--  配置文件上传解析器-->
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <!--    上传文件总大小-->
+    <property name="maxUploadSize" value="5242800" />
+    <!--    上传单个文件的大小-->
+    <property name="maxUploadSizePerFile" value="5242800" />
+    <!--    上传文件的编码类型-->
+    <property name="defaultEncoding" value="UTF-8" />
+  </bean>
+  <!--  配置拦截器-->
+  <mvc:interceptors>
+  <mvc:interceptor>
+    <mvc:mapping path="/**"/>
+    <mvc:exclude-mapping path="/user/login"/>
+    <mvc:exclude-mapping path="/user/register"/>
+    <mvc:exclude-mapping path="/site/findAllSite"/>
+    <mvc:exclude-mapping path="/site/getRow"/>
+    <mvc:exclude-mapping path="/user/addUser"/>
+    <bean class="com.xiyo.interceptor.MyInterceptor"></bean>
+  </mvc:interceptor>
+  </mvc:interceptors>
+
+  <!-- 开启事务控制的注解支持 -->
+  <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+
+  <!--  配置异常处理器-->
+  <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    <property name="defaultErrorView" value="error" />
+
+  </bean>
+
+</beans>
